@@ -26,7 +26,7 @@ Each agent file follows this structure:
 |-------|---------|-------|-------------|
 | `architect` | Architecture review, SOLID principles, layer boundaries, design proposals | Read, Grep, Glob, Bash | No |
 | `code-reviewer` | Code quality, security, memory/concurrency bugs, pre-PR checks | Read, Grep, Glob, Bash | No |
-| `tester` | Unit test generation, test review, mock/stub creation | Read, Grep, Glob, Bash, Edit, Write | Yes |
+| `tester` | Unit test generation, test review, mock/stub creation, Combine/async test patterns | Read, Grep, Glob, Bash, Edit, Write | Yes |
 | `ui-designer` | SwiftUI views, design systems, animations, accessibility, performance | Read, Grep, Glob, Bash, Edit, Write | Yes |
 | `maintenance` | Dead code, deprecated APIs, tech debt, dependency audit, build hygiene | Read, Grep, Glob, Bash | No |
 | `marketing` | App Store optimization, ad copy, competitor analysis, growth strategy | Read, Grep, Glob, Bash, Edit, Write | Yes (marketing content) |
