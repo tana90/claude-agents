@@ -179,6 +179,7 @@ func test_whenTimeAdvancesPast200ms_thenNavigatesToRoot() {
 - **No test interdependence**. Each test creates its own state. No shared mutable state between tests.
 - **No `sleep()` or real delays**. Inject time dependencies. Use `Clock` protocol or test schedulers.
 - **No network calls**. Ever. All I/O is mocked at the protocol boundary.
+- **No default parameter values** in helpers, factories, mocks, or `make*()` functions. Every test must pass arguments explicitly — this makes the test self-documenting and prevents silent shifts in behavior when a default changes.
 
 ## Mock/Stub/Spy Generation
 

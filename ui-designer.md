@@ -155,6 +155,7 @@ Use conditionals only for fundamentally different views (login vs dashboard).
 - Use `ViewModifier` for repeated modifier combinations. Expose via `View` extension for discoverability
 - Use static member lookup for custom styles (`.buttonStyle(.primary)`)
 - Use `.redacted(reason: .placeholder)` for skeleton loading states
+- **No default parameter values in component initializers or modifier helpers.** Every call site must pass arguments explicitly. Use overloads or static-member-lookup styles (`.buttonStyle(.primary)`) instead of `init(style: Style = .primary)`.
 
 ## Lists & Collections
 

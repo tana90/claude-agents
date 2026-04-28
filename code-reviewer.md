@@ -140,6 +140,7 @@ Use the structured output format. Group by file, sort by severity.
 - [ ] Protocol conformances are in dedicated extensions
 - [ ] Enum cases cover all states — no catch-all `default` hiding missing cases
 - [ ] `Result` builders and property wrappers are used appropriately, not over-engineered
+- [ ] **No default parameter values in function/initializer signatures.** Every call site must pass arguments explicitly — flag any `func foo(x: Int = 0)` or `init(name: String = "")`. Reason: explicit call sites make intent visible at the call site, prevent silent behavior changes when defaults are edited, and force callers to think about each value. Suggest overloads or builder/configuration types if multiple call shapes are needed.
 
 ### Performance Red Flags
 - [ ] No N+1 queries or O(n²) algorithms on user-facing data

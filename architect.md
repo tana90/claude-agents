@@ -205,6 +205,13 @@ Swift 6.2 introduces "Approachable Concurrency" — a set of changes that simpli
 - Pure orchestrators — coordinate repositories/services, don't contain low-level details (parsing, networking, SQL).
 - **Layer placement test:** "If I change the database, framework, or UI, does this type need to change?" If yes → wrong layer.
 
+## Function & Initializer Signatures
+
+**No default parameter values.** Every function and initializer parameter must be explicit at the call site.
+- Flag any `func foo(x: Int = 0)` or `init(name: String = "")` as a violation.
+- Reasons: explicit call sites make intent visible (no hidden behavior), changes to defaults can't silently alter caller behavior, defaults often hide weak design (callers don't understand what they're passing).
+- **Fix patterns:** provide explicit overloads for distinct call shapes; use a configuration struct/builder when many parameters need optionality; require the caller to pass `nil`/`.default` explicitly when an "absent" semantic is needed.
+
 ## Architecture Anti-Patterns
 
 | Anti-Pattern | Detection Signal | Fix |
