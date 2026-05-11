@@ -96,26 +96,22 @@ Use the structured output format. Group by file, sort by severity.
 - [ ] `@MainActor` on ViewModels and any UI-mutating code
 - [ ] No data races: mutable shared state is protected by actors or locks
 - [ ] `Task` and `TaskGroup` use structured concurrency where possible
+- [ ] `Task {}` preferred over `Task.detached()` — detached tasks drop the inherited actor context and are almost always wrong
+- [ ] No `DispatchQueue` in new code — modern Swift concurrency (`Task`, `async/await`, actors) instead
 - [ ] `nonisolated` is used intentionally, not as a compiler-silencer
 - [ ] `@Sendable` closures don't capture non-sendable types
 - [ ] Async sequences are consumed with proper cancellation handling
 
-### SwiftUI Specifics
-- [ ] View `body` is lightweight — no heavy computation, no side effects
-- [ ] `@State` is private and initialized inline (not injected)
-- [ ] `@StateObject` vs `@ObservedObject` usage is correct (owner vs observer)
-- [ ] `@Observable` types don't use `@Published` (mixing paradigms)
-- [ ] `EnvironmentObject` / `Environment` dependencies are documented or obvious
-- [ ] No unnecessary `AnyView` type erasure — prefer `@ViewBuilder`, `some View`, or conditional modifiers
-- [ ] `id()` modifier is used correctly and not causing unintended view identity resets
-- [ ] `.task` and `.onAppear` don't trigger duplicate work on re-renders
-- [ ] Large lists use `LazyVStack`/`LazyHStack` or `List` — not `VStack`/`ForEach` for 50+ items
-- [ ] Image loading is async and cached — no synchronous disk reads in `body`
+### SwiftUI (Bug-Class Only)
 
-### SwiftUI Performance
-- [ ] No heavy work in `body` — sorting, filtering, formatting, object creation during render
-- [ ] No synchronous image decode on main thread — `UIImage(data:)` in scrollable content
-- For detailed SwiftUI performance audits (observation fan-out, identity churn, layout complexity), delegate to the `ui-designer` agent
+The full SwiftUI checklist (state declaration patterns, view structure, modifier ordering, identity, design system compliance, performance audits) belongs to the `ui-designer` agent. Catch only these universal bug-classes here:
+
+- [ ] `@StateObject` vs `@ObservedObject` ownership is correct — wrong choice causes lifecycle bugs (state lost on parent re-render, or duplicate instances created on every redraw)
+- [ ] `.task` and `.onAppear` don't trigger duplicate work on re-renders; async work in `.task` is cancellable
+- [ ] No synchronous I/O in `body` — `UIImage(data:)`, file reads, keychain access on the main actor will jank scrolling
+- [ ] No heavy work in `body` — sorting, filtering, object creation cause re-render storms
+
+For everything else SwiftUI (state declaration patterns, `AnyView` avoidance, list strategies, identity, design system compliance, layout, animations, performance), delegate to `ui-designer` rather than reporting yourself.
 
 ### Error Handling
 - [ ] No unhandled `try?` that silently swallows important errors — verify the silence is intentional by checking context
@@ -214,5 +210,7 @@ Save the developer's time — skip these unless egregious:
 - If you find **architectural violations** (wrong layer, broken dependency direction), note them but suggest delegating to the `architect` agent for a full structural review.
 - If you find **missing tests**, note the gap but suggest delegating to the `tester` agent for generation.
 - If a file needs **significant refactoring**, note what and why, then suggest the `architect` agent for structural planning.
+- If you spot **SwiftUI design system / state ownership pattern / view structure / animation / accessibility / layout** issues beyond the bug-class checklist above, delegate to the `ui-designer` agent rather than reviewing them yourself.
+- If you spot **deprecated Apple APIs**, surface to the `maintenance` agent for migration planning rather than fixing inline (unless the deprecation is the direct cause of a bug in the diff under review).
 
 Your job is to catch **verified, real** issues — not to fill a report with findings. An empty review that says "no issues found" is a valid and valuable outcome. Be the sharp eyes, not the heavy hands.
